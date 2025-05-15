@@ -5,7 +5,7 @@
 #   sigma DESVIACIÓN ESTÁNDAR POBLACIONAL
 #   nc NIVEL DE CONFIANZA
 
-# IC para mu con sigma, sigma2 conocido
+# IC para mu (media poblacional) con sigma, sigma2 conocido
 ICMU1=function(n,prom,sigma,nc=0.95) 
   {
     z=qnorm(1-(1-nc)/2)

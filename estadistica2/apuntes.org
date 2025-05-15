@@ -4,7 +4,7 @@
 #+title: Apuntes Estadistica
 #+latex_class: unote
 
-* Inferencia Estadistica 
+* Inferencia Estadistica
 Estimador: $\hat{\theta}(X_1,\dots,X_n)$ es una funcion de las v.a $X_1,\dots,X_n$
 $\overline{X}=\frac{X_1,\dots,X_n}{n}$, y $S^2 = \frac{\sum_{i=1}^{n}(X_i-\overline{X})^2}{n-1}$
 
@@ -38,7 +38,7 @@ a. $\hat{p} = \frac{80-12}{80}=0.85$
 4. \( E(aX + b) = aE(x) + b \)
 5. \( E(X \pm Y) = E(X) \pm E(Y) \)
 6. Si \( X \) e \( Y \) son independientes, \( E(X \cdot Y)= E(X) \cdot E(Y) \)
-   
+
 ** Eficiencia Relativa
 Sean $\hat{\theta_1}$ y $\hat{\theta_2}$ estimadores insesgados de $\theta$. Decimos que $\hat{\theta_1}$ es mas eficiente que  $\hat{\theta_2}$ si \( \text{Var}(\hat{\theta_1})  < \text{Var}(\hat{\theta_2}) \)
 
@@ -50,12 +50,16 @@ Sea $\hat{\theta}$ un estimador insesgado de $\theta$, es consistente con respec
 :PROPERTIES:
 :ID:       b3920cb0-9f03-459e-beb3-5fef7c5c1d11
 :END:
+** Resultados muestrales
+1. \( \sum_{i=1}^{n}X_i \sim N(n \mu, n \sigma^2) \)
+2. \( \overline{X}= \frac{ \sum_{i=1}^{n}X_i }{n} \sim N(\mu, \frac{\sigma^2}{n}) \)
+3. \( S^2 = \frac{ \sum_{i=1}^{n}(X_i - \overline{X})^2 }{n-1} \sim \chi^2(n-1) \)
+4. \(\frac{\overline{X}-\mu}{S / \sqrt{n}} \sim t(n-1) \), se usa cuando \( \sigma^2 \) es desconocida
 ** Estimadores
 Estimadores que vamos a usar
 - \(\overline{x} = \sum_{i=1}^n x_i/{n}  \)
 - \(S^2 = \sum_{i=1}^n (x_i - \overline{x}) / n-1  \)
-- \(p:\) proporcion muestral
-
+- \(p=\frac{\text{numero de exitos}}{n}\) proporcion muestral
 ** Distribucion Normal
 :PROPERTIES:
 :ID:       54029096-870d-4a94-80d5-a362a81b64de
@@ -81,7 +85,7 @@ pt(x, g.l) # el area acumulada
 
    En R usamos ~qchisq(area,g.l)~ y ~pchisq(x,g.l)~
 
-** Distribucion Bernoulli 
+** Distribucion Bernoulli
 :PROPERTIES:
 :ID:       ba2d46b8-3666-4c01-b97a-38d70e493e58
 :END:
@@ -126,8 +130,8 @@ Sean $X_1,\dots,X_n$ m.a $N(\mu_1,\sigma_1^2)$ y $Y_1,\dots,Y_n$ m.a $N(\mu_2,\s
 #   sigma DESVIACIÓN ESTÁNDAR POBLACIONAL
 #   nc NIVEL DE CONFIANZA
 
-# IC para mu con sigma, sigma2 conocido
-ICMU1=function(n,prom,sigma,nc=0.95) 
+# IC para mu (media poblacional) con sigma, sigma2 conocido
+ICMU1=function(n,prom,sigma,nc=0.95)
   {
     z=qnorm(1-(1-nc)/2)
     EE=z*sigma/sqrt(n)
@@ -160,6 +164,7 @@ ICMU2=function(n,prom,s,nc=0.95)
     "Limite inferior:",LI,"Limite superior:",LS,"\n")
   }
 #+end_src
+
 ** Para $\sigma^2$ (varianza poblacional)
 #+begin_src R :session *R* :tangle codigo.R
 # DATOS DE ENTRADA:
@@ -167,7 +172,6 @@ ICMU2=function(n,prom,s,nc=0.95)
 #   n TAMAÑO DE LA MUESTRA
 #   s DESVIACIÓN ESTÁNDAR MUESTRAL
 #   nc NIVEL DE CONFIANZA
-
 
 # IC para sigma2 (varianza poblacional)
 ICSIGMA2=function(n,s,nc=0.95)
@@ -181,6 +185,8 @@ ICSIGMA2=function(n,s,nc=0.95)
     "Limite inferior:",LI,"Limite superior:",LS,"\n")
   }
 #+end_src
+
+#+RESULTS:
 
 ** Para $\pi$, proporcion poblacional
 #+begin_src R :session *R* :tangle codigo.R :output nil
@@ -377,10 +383,10 @@ difprop=function(n1,n2,p1,p2,nc=0.95){
 }
 #+end_src
 
-Observacion
-- LI < LS < 0 \( \rightarrow \pi_1 - \pi_2 < 0 \iff \pi_1 < \pi_2 \)
-- 0 < LI < LS \( \rightarrow \pi_1 - \pi_2 > 0\iff \pi_1 > \pi_2 \)
-- LI < 0 < LS \( \rightarrow \pi_1 - \pi_2 = 0\iff \pi_1 = \pi_2 \)
+Observacion:
+- \( LI < LS < 0 \rightarrow \pi_1 - \pi_2 < 0 \iff \pi_1 < \pi_2 \)
+- \( 0 < LI < LS \rightarrow \pi_1 - \pi_2 > 0\iff \pi_1 > \pi_2 \)
+- \( LI < 0 < LS \rightarrow \pi_1 - \pi_2 = 0\iff \pi_1 = \pi_2 \)
 
 * Prueba de Hipotesis
 Comenzamos con una hipotesis nula \( H_0 \), que contrapone a la hipotesis alternativa \( H_1 \).
@@ -511,7 +517,7 @@ b. desconocido: \[ \text{Bajo } H_0: E_0 = \frac{\overline{X}-\mu}{\frac{\sigma}
 *** 6.1
 [[file:./images/screenshot-03.png]]
 
-Usamos el segundo punto en [[id:54029096-870d-4a94-80d5-a362a81b64de][Distribucion Normal]] 
+Usamos el segundo punto en [[id:54029096-870d-4a94-80d5-a362a81b64de][Distribucion Normal]]
 
 $X_1, \dots, X_5$ m.a $N(7.5, 0.3)$, se quiere $P(\overline{X} < 7$), donde $\overline{X}\sim N(7.5, \frac{0.3}{5})$
 
@@ -558,7 +564,7 @@ a.
    Datos: $\sigma_1 = 1.23$, $\sigma_2 = 1.37$,  $\overline{X_1}=$ rendimiento prom gas 1, $\overline{X_2}=$ rendimiento prom gas 2. $n_1 = 35$, $n_2=42$
    Queremos calcular $P(\overline{X_1}-\overline{X_2}>0.45)$, aplicamos 1. de [[id:a94478f7-c134-4d47-8a59-4a3205e45346][Trabajando con dos poblaciones]]
   $P(Z> \frac{0.45-0}{\sqrt{\frac{1.23^2}{35}+\frac{1.37^2}{42}}})$, como \( \mu = \mu_1 = \mu_2 \rightarrow \mu_1 - \mu_2 = 0 \)
-  
+
    #+begin_src R :session *R*
 1-pnorm(0.45/sqrt(( 1.23^2/35 ) + ( 1.37^2/42 )))
    #+end_src
@@ -595,6 +601,23 @@ denom=sqrt((0.02*0.98/100)+(0.025*0.975/150))
 #+RESULTS:
 : 0.395861500409604
 
+*** Si X ~ N (40,10), calcular Pr (39≤ X ≤41) para n=10. ¿En qué intervalo se obtendrán el 95% de los resultados?
+
+*** guia .55
+Estudios realizados por neurocientíficos del MIT revelan que la melatonina,  segregada por la glándula pineal en el cerebro, funciona naturalmente como  hormona inductora del sueño (Tampa Tribune, 1 de marzo de 1994). Voluntarios de sexo masculino recibieron distintas dosis de melanina o placebos y luego se colocaron en una habitación oscura a medio día, pidiéndoseles que cerraran los ojos y se durmieran. Lo que interesaba a los científicos del MIT era el tiempo Y (en minutos) que tardaba cada voluntario en quedarse dormido. Los investigadores determinaron que con el placebo (es decir, sin hormona), el tiempo medio para dormirse era de 15 minutos. Supón que con el tratamiento de placebo mu = 15 y sigma = 5.
+(a) Considera una muestra aleatoria de n = 20 hombres que reciben la hormona  inductora del sueño. Sea y el tiempo medio en quedarse dormido en esta muestra. Si la hormona no es eficaz para inducir el sueño, describe la distribución de muestreo de y .
+(b) Calcula en el caso (a) p( y \leq 6)
+
+a. \( n = 20, \mu = 15, \sigma = 5 \). Por el teorema central del limite tenemos que \[ \overline{y} \sim N(\mu=15, \frac{\sigma}{\sqrt{n}} = \frac{5}{\sqrt{20}} \approx 1.118) \]
+b. \( \mu=15, \sigma = 5, n = 20, EE = \frac{\sigma}{\sqrt{n}} \)
+   
+   #+begin_src R :session *R* :results output
+pnorm(6, 15, 5/sqrt(20))
+   #+end_src
+
+   #+RESULTS:
+   : 4.14495733718615e-16
+
 ** Intervalos de Confianza
 *** 6.5
 Se ha comprobado que la concentración promedio de zinc que se saca del agua de un río a partir de una muestra de mediciones de zinc en 36 sitios diferentes es de 2.6 gramos por mililitro. Encontrar los intervalos de confianza del 95% y 99% para la concentración media de zinc en el río, suponiendo que la desviación típica de la población es 0.3.
@@ -618,7 +641,7 @@ ICMU1(36, 2.6, 0.3, 0.99)
 #+end_src
 
 #+RESULTS:
-: Un intervalo de confianza para MU 
+: Un intervalo de confianza para MU
 :  al nivel de confianza 99 % es:
 :  Limite inferior: 2.471209 Limite superior: 2.728791
 
@@ -660,7 +683,7 @@ ICPI(100, 0.04, 0.95)
    #+end_src
 
    #+RESULTS:
-   : Un intervalo de confianza para PI 
+   : Un intervalo de confianza para PI
    :  al nivel de confianza 95 % es:
    :  Limite inferior: 0.001592707 Limite superior: 0.07840729
 
@@ -680,7 +703,82 @@ Comp. B: \( n=50, \overline{X}_B = 4000, \sigma_B = 200 \)
 difmed1(n1=100, n2=50, prom1=4500, prom2=4000, sigma1=300, sigma2=200)
 #+end_src
 
-** Prueba Hipotesis
+*** guia .1
+El peso medio de los estudiantes secundarios sigue una distribución normal. Se toma una muestra aleatoria de 100 estudiantes y se obtiene una media de 65 kg con una desviación estándar de 9kg. Encuentre los límites para intervalos de confianza al 95% y 99% para:
+a. La media poblacional si se sabe que la desviación estándar poblacional es de 10 kg
+   \( n = 100, \overline{x}=65, s = 9, \sigma=10\)
+
+   #+begin_src R :session *R* :results output
+ICMU1(100, 65, 10)
+   #+end_src
+
+   #+RESULTS:
+   : Un intervalo de confianza para MU
+   :  al nivel de confianza 95 % es:
+   :  Limite inferior: 63.04004 Limite superior: 66.95996
+
+   #+begin_src R :session *R* :results output
+ICMU1(100, 65, 10, 0.99)
+   #+end_src
+
+   #+RESULTS:
+   : Un intervalo de confianza para MU
+   :  al nivel de confianza 99 % es:
+   :  Limite inferior: 62.42417 Limite superior: 67.57583
+b. La media poblacional si no se conoce la desviación estándar poblacional. Además construya un intervalo de confianza al 95% para la varianza poblacional
+   #+begin_src R :session *R* :results output
+ICMU2(100, 65, 9, 0.95)
+   #+end_src
+
+   #+RESULTS:
+   : Un intervalo de confianza para MU
+   :  al nivel de confianza 95 % es:
+   :  Limite inferior: 63.2142 Limite superior: 66.7858
+
+   #+begin_src R :session *R* :results output
+ICMU2(100, 65, 9, 0.99)
+   #+end_src
+
+   #+RESULTS:
+   : Un intervalo de confianza para MU
+   :  al nivel de confianza 99 % es:
+   :  Limite inferior: 62.63624 Limite superior: 67.36376
+
+   #+begin_src R :session *R* :results output
+ICSIGMA2(100, 9)
+   #+end_src
+
+   #+RESULTS:
+   : Un intervalo de confianza para SIGMA^2
+   :  al nivel de confianza 95 % es:
+   :  Limite inferior: 62.44258 Limite superior: 109.3086
+
+*** guia .4
+En víspera de elecciones presidenciales se toma una muestra aleatoria de 1000 electores, de los cuales 628 dicen estar indecisos todavía. Se pide entonces un intervalo al 98% de confianza de la proporción de personas que no saben aún por quien votar.
+\( n = 1000, p = \frac{628}{1000} = 0.628 \)
+#+begin_src R :session *R* :results output
+ICPI(1000, 0.628, 0.98)
+#+end_src
+
+#+RESULTS:
+: Un intervalo de confianza para PI
+:  al nivel de confianza 98 % es:
+:  Limite inferior: 0.5924429 Limite superior: 0.6635571
+
+*** guia .6
+Se debe estimar el grosor de las láminas de vidrio producidas en cierta fábrica. Se toma una muestra aleatoria de tamaño 100 y se encuentra un grosor promedio de 20mm. Suponiendo que se conoce la varianza poblacional y es igual a 1.44mm^2, se pide encontrar un intervalo de confianza del 95% de confianza para el espesor promedio de las láminas de vidrio.
+\( n = 100, \overline{x}= 20, \sigma^2=1.44 \)
+
+#+begin_src R :session *R* :results output
+ICMU1(100, 20, sqrt(1.44)) # sigma = \sqrt{sigma^2}
+#+end_src
+
+#+RESULTS:
+: Un intervalo de confianza para MU
+:  al nivel de confianza 95 % es:
+:  Limite inferior: 19.7648 Limite superior: 20.2352
+
+** Prueba de Hipotesis
 *** fabricantes de herramientas
 [[file:./images/screenshot-14.png]]
 
@@ -691,7 +789,7 @@ PHMU(MU0 = 10, H1 = "mayor", NS=0.01, n = 40, prom = 11.25, Var = 9, POB = FALSE
 \( prom= \frac{450}{40} \)
 
 #+RESULTS:
-: La Hipotesis alternativa es H1: Mu mayor 10 
+: La Hipotesis alternativa es H1: Mu mayor 10
 : [1] "Varianza Poblacional Desconocida"
 : El valor de la estadística de prueba es: 2.635231
 : [1] "SE RECHAZA H0"
