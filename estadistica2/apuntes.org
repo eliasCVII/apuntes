@@ -1,0 +1,650 @@
+:PROPERTIES:
+:ID:       c6be7684-af14-4db1-a17b-68dcc9d47fda
+:END:
+#+title: Apuntes Estadistica
+#+latex_class: unote
+
+* Inferencia Estadistica 
+Estimador: $\hat{\theta}(X_1,\dots,X_n)$ es una funcion de las v.a $X_1,\dots,X_n$
+$\overline{X}=\frac{X_1,\dots,X_n}{n}$, y $S^2 = \frac{\sum_{i=1}^{n}(X_i-\overline{X})^2}{n-1}$
+
+Estimacion: $\hat{\theta}$ es un valor que se obtiene cuando usamos la informacion de el estimador. En el caso de conocer $\sigma^2$ en una m.a de $N(\mu,\sigma^2)$, podemos usar los siguientes estimadores de $\mu$
+
+\begin{align*}
+\hat{\mu_1} &= \frac{X_1 + 2X_2 + \cdots + nX_n}{n^2} &  \hat{\mu_2}&=\frac{X_1+X_n}{2}\\
+\hat{\mu_3}&=\frac{X_1+X_2+\cdots + X_n}{n(n-1)}      &  \hat{\mu_4}&=\frac{X_1+\cdots+X_n}{n}
+\end{align*}
+Donde $\mu_1$ subestima el valo de $\mu$, $\mu_2$ es insesgado de $\mu$, $\mu_3$ es un estimador sesgado de $\mu$ y $\mu_4$ es insesgado de $\mu$. Concluimos que $\mu_2$ y $\mu_4$ son estimadores insesgados de $\mu$.
+
+** Insesgamiento
+Un estimador es insesgado cuando su media coincide con el valor del parametro a estimar, osea, $E(\hat{\theta}(X_1,\dots,X_n))=\theta$, lo que quiere decir que \( \sum_{i=1}^{n}\frac{\hat{\theta_i}}{n} = \theta \) es ser insesgado.
+
+*** Ejemplo 1
+[[file:./images/screenshot-10.png]]
+a. $E(\overline{X}-\overline{Y})= E(\overline{X})-E(\overline{Y)} = \mu_1 - \mu_2$, entonces el estimador insesgado seria \[ \overline{x}-\overline{y} = 8.141 - 8.575 = 0.434 \]
+
+*** Ejemplo 2
+[[file:./images/screenshot-12.png]]
+
+a. $\hat{p} = \frac{80-12}{80}=0.85$
+
+*** Propiedades de Esperanza
+:PROPERTIES:
+:ID:       069765df-44b9-411d-9c95-65b7cfae8e25
+:END:
+1. \( E(c) = c \)
+2. \( E(cX)= cE(x) \)
+3. \( E(X+c) = E(x) + c \)
+4. \( E(aX + b) = aE(x) + b \)
+5. \( E(X \pm Y) = E(X) \pm E(Y) \)
+6. Si \( X \) e \( Y \) son independientes, \( E(X \cdot Y)= E(X) \cdot E(Y) \)
+   
+** Eficiencia Relativa
+Sean $\hat{\theta_1}$ y $\hat{\theta_2}$ estimadores insesgados de $\theta$. Decimos que $\hat{\theta_1}$ es mas eficiente que  $\hat{\theta_2}$ si \( \text{Var}(\hat{\theta_1})  < \text{Var}(\hat{\theta_2}) \)
+
+** Consistencia
+Sea $\hat{\theta}$ un estimador insesgado de $\theta$, es consistente con respecto a $\theta$ si
+\[ \lim_{n \to \infty} \text{Var}(\hat{\theta}(X_1,\dots,X_n)) = 0 \], a medida que $n$ se acerca al infinito, $P(\hat{\theta})$ es $1$.
+
+* Estimacion Puntual
+:PROPERTIES:
+:ID:       b3920cb0-9f03-459e-beb3-5fef7c5c1d11
+:END:
+** Estimadores
+Estimadores que vamos a usar
+- \(\overline{x} = \sum_{i=1}^n x_i/{n}  \)
+- \(S^2 = \sum_{i=1}^n (x_i - \overline{x}) / n-1  \)
+- \(p:\) proporcion muestral
+
+** Distribucion Normal
+:PROPERTIES:
+:ID:       54029096-870d-4a94-80d5-a362a81b64de
+:END:
+Datos de una distribucion normal \( N(\mu, \sigma) \)
+\( \mu \) es la media, \( \sigma \) es la desviacion estandar
+Si tenemos $X_1, \dots, X_n$ m.a de $N(\mu, \sigma^2)$, entonces
+1. $\sum_{i=1}^{n}X_i \sim N(n \mu, n \sigma^2)$
+2. $\overline{X} \sim N(\mu, \sigma^2/n)$
+3. $S^2 \sim \chi^2(n-1)$
+
+4. Resultado 1:
+    Si \(\overline{x} = \sum_{i=1}^n x_i/{n} \sim N(\mu, \frac{\sigma^2}{n}) \), lo usamos para hablar sobre \(\mu\) donde \(\sigma^2\) es conocido.
+5. Resultado 2:
+   Tenemos que \( \frac{ \overline{x}-\mu }{\frac{s}{\sqrt{n}}} = \sqrt{n}\frac{\overline{x}-\mu}{S} \sim \underbrace{t(n-1)}_{\text{grado de libertad}} \). Y lo usamos cuando \( \sigma^2 \) es desconocido.
+   En R usamos
+   #+begin_src R :sesssion *R*
+qt(area, g.l) # El percentil
+pt(x, g.l) # el area acumulada
+   #+end_src
+6. Resultado 3:
+   Si \( \frac{(n-1)S^2}{\sigma^2} \sim \chi^2(n-1) \), entonces lo usamos para hablar de \( \sigma^2 \), cuando este es el parametro de interes.
+
+   En R usamos ~qchisq(area,g.l)~ y ~pchisq(x,g.l)~
+
+** Distribucion Bernoulli 
+:PROPERTIES:
+:ID:       ba2d46b8-3666-4c01-b97a-38d70e493e58
+:END:
+Con la distribucion de Bernoulli, tenemos resultados de variables $X \in \{0,1\}$, que forman una proporcion.
+Si tenemos $X_1, \dots, X_n$ m.a de $\text{Bernoulli} (\pi)$, entonces:
+\( E(X_i) = \pi \) y \( Var(X_i)= \pi \cdot (1-\pi)\)
+$p$, proporcion muestral $= \frac{ \sum_{i=1}^{n}{X_i} }{n}$
+** Teorema Central del Limite
+:PROPERTIES:
+:ID:       acfb4f84-9bee-40ff-900f-434a3d5ca5a1
+:END:
+Sean $X_1, \dots, X_n$ m.a F con $E(X_i)=\mu$ y $\text{Var} (X_i)= \sigma^2$, entonces:
+$\frac{\overline{X}-\mu}{\sigma / \sqrt{n}} \sim N_{n \to \infty} (0,1)$, si es que $n$ es lo suficientemente grande.
+
+Asi, si $X_1, \dots, X_n$ m.a Bernoulli($\pi$) con $E(X_i)=\pi$ y $\text{Var} (X_i)= \pi (1- \pi)$, $p = \sum_{i=1}^{n}X_i /n$ tiene la siguiente distribucion:
+$\frac{p - \pi}{\sqrt{\frac{\pi (1-\pi)}{n}}} \sim a N(0,1)$, tambien tenemos que $\frac{p - \pi}{\sqrt{\frac{p (1-p)}{n}}} \sim a N(0,1)$
+
+* Intervalos de confianza
+:PROPERTIES:
+:ID:       b68ccb5b-ac97-4c57-ac92-f9eab7bbeaa6
+:END:
+** Trabajando con dos poblaciones
+:PROPERTIES:
+:ID:       a94478f7-c134-4d47-8a59-4a3205e45346
+:END:
+Sean $X_1,\dots,X_n$ m.a $N(\mu_1,\sigma_1^2)$ y $Y_1,\dots,Y_n$ m.a $N(\mu_2,\sigma_2^2)$ que son independientes
+
+1. $\frac{(\overline{X}-\overline{Y})-(\mu_1-\mu_2)}{\sqrt{\sigma_1^2 /n_1 + \sigma_2^2 /n_2}} \sim N(0,1)$ Las poblaciones son conocidas
+2. $\frac{(\overline{X}-\overline{Y})-(\mu_1-\mu_2)}{Sp\sqrt{\frac{1}{n_1}+\frac{1}{n_2}}} \sim t(n_1+n_2 -2)$, donde $\sigma_1^2$ y $\sigma_2^2$ son desconocidos pero iguales. Y $S^2 p = \frac{(n_1-1)S_1^2+(n_2-1)S_2^2}{n_1+n_2}$
+3.  $\frac{(\overline{X}-\overline{Y})-(\mu_1-\mu_2)}{Sp\sqrt{\frac{1}{n_1}+\frac{1}{n_2}}} \sim t(\eta)$, donde $\sigma_1^2$ y $\sigma_2^2$ son desconocidos y diferentes. donde \( \gamma = \frac{ (\frac{S^2_1}{n_1} + \frac{S^2_2}{n_2})^2 }{\frac{(S^2_1/n_1)^2}{n_1 - 1} + \frac{(S^2_2/n_2)^2}{n_2 - 1} }\)
+4. $\frac{S_1^2 / S_2^2}{\sigma_1^2 / \sigma_2^2} \sim F(n_1-1, n_2-1)$
+
+** Para $\mu$ con $\sigma$ o $\sigma^2$ conocido
+:PROPERTIES:
+:ID:       527385f7-28e2-4083-b123-a3b3169d2f2e
+:END:
+#+begin_src R :session *R* :output nil :tangle codigo.R
+# DATOS DE ENTRADA:
+#
+#   n TAMAÑO DE LA MUESTRA
+#   prom PROMEDIO MUESTRAL
+#   sigma DESVIACIÓN ESTÁNDAR POBLACIONAL
+#   nc NIVEL DE CONFIANZA
+
+ICMU1=function(n,prom,sigma,nc=0.95)
+  {
+    z=qnorm(1-(1-nc)/2)
+    EE=z*sigma/sqrt(n)
+    LI=prom-EE
+    LS=prom+EE
+    cat("Un intervalo de confianza para MU","\n",
+         "al nivel de confianza",nc*100,"%", "es:","\n",
+    "Limite inferior:",LI,"Limite superior:",LS,"\n")
+  }
+#+end_src
+
+** Para $\mu$ con $\sigma$ o $\sigma^2$ desconocido
+#+begin_src R :session *R* :tangle codigo.R
+# DATOS DE ENTRADA:
+#
+#   n TAMAÑO DE LA MUESTRA
+#   prom PROMEDIO MUESTRAL
+#   s DESVIACIÓN ESTÁNDAR MUESTRAL
+#   nc NIVEL DE CONFIANZA
+
+ICMU2=function(n,prom,s,nc=0.95)
+  {
+    t=qt(1-(1-nc)/2,n-1)
+    EE=t*s/sqrt(n)
+    LI=prom-EE
+    LS=prom+EE
+    cat("Un intervalo de confianza para MU","\n",
+         "al nivel de confianza",nc*100,"%", "es:","\n",
+    "Limite inferior:",LI,"Limite superior:",LS,"\n")
+  }
+#+end_src
+** Para $\sigma^2$ (varianza poblacional)
+#+begin_src R :session *R* :tangle codigo.R
+# DATOS DE ENTRADA:
+#
+#   n TAMAÑO DE LA MUESTRA
+#   s DESVIACIÓN ESTÁNDAR MUESTRAL
+#   nc NIVEL DE CONFIANZA
+
+ICSIGMA2=function(n,s,nc=0.95)
+  {
+    v1=qchisq((1-nc)/2,n-1)
+    v2=qchisq(1-(1-nc)/2,n-1)
+    LI=(n-1)*s^2/v2
+    LS=(n-1)*s^2/v1
+    cat("Un intervalo de confianza para SIGMA^2","\n",
+         "al nivel de confianza",nc*100,"%", "es:","\n",
+    "Limite inferior:",LI,"Limite superior:",LS,"\n")
+  }
+#+end_src
+
+** Para $\pi$, proporcion poblacional
+#+begin_src R :session *R* :tangle codigo.R :output nil
+# DATOS DE ENTRADA:
+#
+#   n TAMAnO DE LA MUESTRA
+#   p PROPORCIoN MUESTRAL
+#   nc NIVEL DE CONFIANZA
+
+ICPI=function(n,p,nc=0.95)
+  {
+    z=qnorm(1-(1-nc)/2)
+    EE=z*sqrt(p*(1-p)/n)
+    LI=p-EE
+    LS=p+EE
+    cat("Un intervalo de confianza para PI","\n",
+         "al nivel de confianza",nc*100,"%", "es:","\n",
+    "Limite inferior:",LI,"Limite superior:",LS,"\n")
+  }
+#+end_src
+
+** Tamano de la muestra para una media poblacion $\mu$
+#+begin_src R :session *R* :tangle codigo.R
+# SE NECESITA:
+#     EE ERROR DE ESTIMACIoN
+#     nc NIVEL DE CONFIANZA
+#     sigma DESVIACIoN ESTaNDAR
+#
+
+NMU=function(EE,nc,sigma)
+  {
+    z=qnorm(1-(1-nc)/2)
+    n=round((z/EE)^2*sigma^2,0)
+    cat("El tamano de la muestra para estimar MU","\n",
+         "al nivel de confianza",nc*100,"%","con un error
+ de estimacion de",EE,", es:",n,"\n")
+  }
+#+end_src
+** Tamano de la muestra para una proporcion poblacional $\mu$
+#+begin_src R :session *R* :tangle codigo.R
+# SE NECESITA:
+#     EE ERROR DE ESTIMACIoN
+#     nc NIVEL DE CONFIANZA
+#     p PROPORCIoN CONOCIDA
+#
+
+NPI=function(EE,nc,p)
+  {
+    z=qnorm(1-(1-nc)/2)
+    n1=round((z/EE)^2*p*(1-p),0)
+    n2=round(1/4*(z/EE)^2,0)
+    cat("El tamano de la muestra para estimar PI","\n",
+         "al nivel de confianza",nc*100,"%","con un error
+ de estimacion de",EE,", es:",n1,"\n")
+    cat("El tamano de la muestra para estimar PI","\n",
+         "al nivel de confianza",nc*100,"%","con un error
+ de estimacion de",EE,",en el peor de los casos, es:",n2,"\n")
+  }
+#+end_src
+** Para dos poblaciones, diferencia de medias $\mu_1 - \mu_2$
+*** Caso 1: Varianzas poblacionales conocidas
+:PROPERTIES:
+:ID:       c65c1ab6-0c52-4ac3-93f4-c52b7c290ddc
+:END:
+#+begin_src R :session *R* :tangle codigo.R
+# DATOS:
+# n1, n2 TAMAÑOS DE LAS MUESTRAS
+# prom1, prom2 PROMEDIOS MUESTRALES
+# sigma1, sigma2 DESVIACIONES POBLACIONALES
+# nc NIVEL DE CONFIANZA (PROPORCIÓN)
+
+difmed1=function(n1,n2,prom1,prom2,sigma1,sigma2,nc=0.95)
+{
+  z=qnorm(1-(1-nc)/2)
+  EE=z*sqrt(sigma1^2/n1+sigma2^2/n2)
+  LI= prom1-prom2-EE
+  LS=prom1-prom2+EE
+  cat("Un intervalo de confianza para MU1-MU2","\n",
+         "al nivel de confianza",nc*100,"%", "es:","\n",
+  "Limite inferior:",LI,"Limite superior:",LS,"\n")
+}
+#+end_src
+
+*** Caso 2: Varianzas poblacionales desconocidas pero iguales
+:PROPERTIES:
+:ID:       cf2cee72-f6c7-470a-8a95-f11ec9c56b19
+:END:
+
+#+begin_src R :session *R* :tangle codigo.R
+# DATOS:
+# n1, n2 TAMAÑOS DE LAS MUESTRAS
+# prom1, prom2 PROMEDIOS MUESTRALES
+# s1, s2 DESVIACIONES ESTANDAR MUESTRALES
+# nc NIVEL DE CONFIANZA (PROPORCIÓN)
+#
+
+     difmed2=function(n1,n2,prom1,prom2,s1,s2,nc=0.95)
+     {
+        t=qt(1-(1-nc)/2,n1+n2-2)
+  sp=sqrt(((n1-1)*s1^2+(n2-1)*s2^2)/(n1+n2-2))
+  EE=t*sp*sqrt(1/n1+1/n2)
+  LI= prom1-prom2-EE
+  LS=prom1-prom2+EE
+  cat("Un intervalo de confianza para MU1-MU2","\n",
+         "al nivel de confianza",nc*100,"%", "es:","\n",
+  "Limite inferior:",LI,"Limite superior:",LS,"\n")
+     }
+#+end_src
+
+*** Caso 3: Varianzas poblacionales desconocidas y diferentes
+:PROPERTIES:
+:ID:       5c6b7bec-01e4-409d-bdcc-02c682d7982f
+:END:
+
+#+begin_src R :session *R* :tangle codigo.R
+# DATOS:
+# n1, n2 TAMAÑOS DE LAS MUESTRAS
+# prom1, prom2 PROMEDIOS MUESTRALES
+# s1, s2 DESVIACIONES ESTANDAR MUESTRALES
+# nc NIVEL DE CONFIANZA (PROPORCIÓN)
+#
+
+     difmed3=function(n1,n2,prom1,prom2,s1,s2,nc=0.95)
+     {
+  eta=(s1^2/n1+s2^2/n2)^2/((s1^2/n1)^2/(n1-1)+
+             (s2^2/n2)^2/(n2-1))
+        t=qt(1-(1-nc)/2,eta)
+  EE=t*sqrt(s1^2/n1+s2^2/n2)
+  LI= prom1-prom2-EE
+  LS=prom1-prom2+EE
+  cat("Un intervalo de confianza para MU1-MU2","\n",
+         "al nivel de confianza",nc*100,"%", "es:","\n",
+  "Limite inferior:",LI,"Limite superior:",LS,"\n")
+     }
+#+end_src
+
+*** Cuociente de varianzas poblacionales $\frac{\sigma_1^2}{\sigma_2^2}$
+:PROPERTIES:
+:ID:       f58f9cfd-b550-43e5-ae1f-77cdffc89bc3
+:END:
+#+begin_src R :session *R* :tangle codigo.R
+# DATOS:
+# s1, s2 DESVIACION ESTANDAR MUESTRALES
+# n1, n2 TAMAÑOS DE LAS MUESTRAS
+# nc NIVEL DE CONFIANZA (PROPORCION)
+#
+
+cuovar=function(n1,n2,s1,s2,nc=0.95)
+     {
+  f1=qf((1-nc)/2,n1-1,n2-1)
+  f2=qf(1-(1-nc)/2,n1-1,n2-1)
+  cuo=s1^2/s2^2
+  LI=cuo/f2
+  LS=cuo/f1
+        cat("Un intervalo de confianza para SIGMA1^2/SIGMA2^2",
+            "\n","al nivel de confianza",nc*100,"%", "es:","\n",
+  "Limite inferior:",LI,"Limite superior:",LS,"\n")
+     }
+#+end_src
+
+** Para diferencia de proporciones $\pi_1 - \pi_2$
+:PROPERTIES:
+:ID:       8516de14-3015-46d9-b220-1ab012f5ec6d
+:END:
+#+begin_src R :session *R* :tangle codigo.R
+# DATOS:
+#   n1, n2 TAMAÑOS DE LAS MUESTRAS
+#   p1, p2 PROPORCIONES MUESTRALES
+#   nc NIVEL DE CONFIANZA (PROPORCIÓN)
+
+difprop=function(n1,n2,p1,p2,nc=0.95){
+  z=qnorm(1-(1-nc)/2)
+  v1=p1*(1-p1)/n1
+  v2=p2*(1-p2)/n2
+  EE = z*sqrt(v1+v2)
+  LI=p1-p2-EE
+  LS=p1-p2+EE
+  cat("Un intervalo de confianza para PI1-PI2","\n",
+         "al nivel de confianza",nc*100,"%", "es:","\n",
+      "Limite inferior:",LI,"Limite superior:",LS,"\n")
+}
+#+end_src
+
+Observacion
+- LI < LS < 0 \( \rightarrow \pi_1 - \pi_2 < 0 \iff \pi_1 < \pi_2 \)
+- 0 < LI < LS \( \rightarrow \pi_1 - \pi_2 > 0\iff \pi_1 > \pi_2 \)
+- LI < 0 < LS \( \rightarrow \pi_1 - \pi_2 = 0\iff \pi_1 = \pi_2 \)
+
+* Prueba de Hipotesis
+Comenzamos con una hipotesis nula \( H_0 \), que contrapone a la hipotesis alternativa \( H_1 \).
+
+** Tipos de errores
+- Tipo I
+Este ocurre cuando \( H_0 \) es verdadera y la rechazamos a favor de \( H_1 \)
+- Tipo II
+Este ocurre cuando no rechazamos la hipotesis nula cuando esta es falsa.
+
+|                       | \( H_0: T \) | \( H_0 : F \) |
+| No rechazar \( H_0 \) | Correcta     | Error Tipo II |
+| Rechazar \( H_0 \)    | Error Tipo 1 | Correcta      |
+
+Se realizan afirmacion sobre el parametro \( H_0 \text{ y } H_1 \)
+1. \( H_0: \theta  = \theta_0 \quad \text{vs} \quad H_1: \theta \neq \theta_0 \)
+2. \( H_0: \theta \leq \theta_0 \quad \text{vs} \quad H_1: \theta > \theta_0 \)
+3. \( H_0: \theta \geq \theta_0 \quad \text{vs} \quad H_1: \theta < \theta_0 \)
+
+Entonces, podemos definir las probabilidades
+
+- \( P(\text{Error Tipo I}) = P(\text{Rechazar }H_0 | H_0 \text{ es verdad}) = \alpha \)
+- \( P(\text{Error Tipo II}) = P(\text{No Rechazar }H_0 | H_0 \text{ es mentira}) = \beta(\theta_1)\)
+
+** PH para media poblacional
+:PROPERTIES:
+:ID:       1ddbac87-e48a-4599-8365-84a3a29c9aba
+:END:
+#+begin_src R :session *R* :results nil
+## VARIABLES: MU0, Valor de MU en H0
+##            H1=c("distinto","mayor","menor")
+##            NS, Nivel de Significación (0.05)
+##            n, tamaño de la muestra
+##            prom, promedio muestral
+##            Var, varianza muestral o poblacional
+##            POB: TRUE si es Poblacional la varianza
+##                 FALSE si es muestral la varianza
+
+PHMU=function(MU0, H1, NS, n, prom, Var,POB=TRUE)
+{
+	cat("La Hipotesis alternativa es H1: Mu", H1, MU0,"\n")
+	if(H1=="distinto")
+	{
+		if(POB)
+		{
+			print("Varianza Poblacional Conocida")
+			E0=(prom-MU0)/sqrt(Var/n)
+			cat("El valor de la estadística de prueba es:",E0,"\n")
+			Z=qnorm(1-NS/2)
+			if(abs(E0)>Z) print("SE RECHAZA H0")
+			else print("NO SE RECHAZA H0")
+			valor.p=2*(1-pnorm(abs(E0)))
+			cat("El valor-p vale:",valor.p,"\n")
+		}
+		else {
+			print("Varianza Poblacional Desconocida")
+			E0=(prom-MU0)/sqrt(Var/n)
+			cat("El valor de la estadística de prueba es:",E0,"\n")
+			T=qt(1-NS/2,n-1)
+			if(abs(E0)>T) print("SE RECHAZA H0")
+			else print("NO SE RECHAZA H0")
+			valor.p=2*(1-pt(abs(E0),n-1))
+			cat("El valor-p vale:",valor.p,"\n")
+			}
+	}
+	if(H1=="mayor")
+	{
+		if(POB)
+		{
+			print("Varianza Poblacional Conocida")
+			E0=(prom-MU0)/sqrt(Var/n)
+			cat("El valor de la estadística de prueba es:",E0,"\n")
+			Z=qnorm(1-NS)
+			if(E0>Z) print("SE RECHAZA H0")
+			else print("NO SE RECHAZA H0")
+			valor.p=1-pnorm(E0)
+			cat("El valor-p vale:",valor.p,"\n")
+		}
+		else {
+			print("Varianza Poblacional Desconocida")
+			E0=(prom-MU0)/sqrt(Var/n)
+			cat("El valor de la estadística de prueba es:",E0,"\n")
+			T=qt(1-NS,n-1)
+			if(E0>T) print("SE RECHAZA H0")
+			else print("NO SE RECHAZA H0")
+			valor.p=1-pt(E0,n-1)
+			cat("El valor-p vale:",valor.p,"\n")
+			}
+	}
+	if(H1=="menor")
+	{
+		if(POB)
+		{
+			print("Varianza Poblacional Conocida")
+			E0=(prom-MU0)/sqrt(Var/n)
+			cat("El valor de la estadística de prueba es:",E0,"\n")
+			Z=qnorm(NS)
+			if(E0<Z) print("SE RECHAZA H0")
+			else print("NO SE RECHAZA H0")
+			valor.p=pnorm(E0)
+			cat("El valor-p vale:",valor.p,"\n")
+		}
+		else {
+			print("Varianza Poblacional Desconocida")
+			E0=(prom-MU0)/sqrt(Var/n)
+			cat("El valor de la estadística de prueba es:",E0,"\n")
+			T=qt(NS,n-1)
+			if(E0<T) print("SE RECHAZA H0")
+			else print("NO SE RECHAZA H0")
+			valor.p=pt(E0,n-1)
+			cat("El valor-p vale:",valor.p,"\n")
+			}
+	}
+}
+#+end_src
+
+Se quiere probar:
+1. \( H_0: \mu = \mu_0 \quad \text{vs } H_1: \mu \neq \mu_0 \)
+2. \( H_0: \mu \leq \mu_0 \quad \text{vs } H_1: \mu > \mu_0 \)
+3. \( H_0: \mu \geq \mu_0 \quad \text{vs } H_1: \mu < \mu_0 \)
+
+Cuando \( \sigma^2 \) (poblacion) es :
+a. conocido: \[ \text{Bajo } H_0: E_0 = \frac{\overline{X}-\mu}{\frac{\sigma}{\sqrt{n}}} \sim N(0,1) \]
+b. desconocido: \[ \text{Bajo } H_0: E_0 = \frac{\overline{X}-\mu}{\frac{\sigma}{\sqrt{n}}} \sim t(n-1) \]
+
+* Ejercicios
+** Estimacion Puntual
+*** 6.1
+[[file:./images/screenshot-03.png]]
+
+Usamos el segundo punto en [[id:54029096-870d-4a94-80d5-a362a81b64de][Distribucion Normal]] 
+
+$X_1, \dots, X_5$ m.a $N(7.5, 0.3)$, se quiere $P(\overline{X} < 7$), donde $\overline{X}\sim N(7.5, \frac{0.3}{5})$
+
+#+begin_src R :session *R*
+pnorm(7, 7.5, sqrt(0.3/5))
+#+end_src
+
+#+RESULTS:
+: 0.0206134166685818
+
+*** 6.2
+[[file:./images/screenshot-05.png]]
+Aplicamos un estimacion con [[id:ba2d46b8-3666-4c01-b97a-38d70e493e58][Distribucion Bernoulli]], donde nuestra proporcion muestral $p$ sera $\frac{\sum_{i=1}^{500} X_i}{500}$
+Queremos calcular, entonces aplicamos la proporcion muestral con \( p = 0.05 \) y \( \pi=0.03 \) $P(p>0.05) = P(Z>\frac{0.05-0.03}{\sqrt{\frac{0.03 \times 0.97}{500}}}) = P(Z>2.621613)$
+
+#+begin_src R :session *R*
+## 1-pnorm(2.621613) -- media 0 y ds 1 por defecto, busca la probabilidad que una variable aleatoria normal estandar tenga valor mayor a 2.612..
+1-pnorm(0.05, 0.03, sqrt(0.03*0.97/500)) # queremos las que estan por arriba
+#+end_src
+
+#+RESULTS:
+: 0.00437574332827917
+
+*** 6.3
+[[file:./images/screenshot-04.png]]
+
+Usamos el primer punto de [[id:54029096-870d-4a94-80d5-a362a81b64de][Distribucion Normal]]
+Queremos calcular $P(\sum_{i=1}^{4}X_i > 300)$ con $\sum_{i=1}^{4}X_i \sim N(4 \cdot 71, 4 \cdot 7)$
+
+#+begin_src R :session *R*
+## pnorm(300, 284, sqrt(28))
+1-pnorm(300, 284, sqrt(28))
+#+end_src
+
+#+RESULTS:
+: 0.00124845445757082
+
+Entonces  $P(\sum_{i=1}^{4}X_i > 300) = 0.00124845445757082$
+
+*** 6.4
+[[file:./images/screenshot-06.png]]
+Usamos [[id:c65c1ab6-0c52-4ac3-93f4-c52b7c290ddc][Caso 1: Varianzas poblacionales conocidas]], asumiendo que ambas m.a son independientes y tambien tenemos que $\mu_1 = \mu_2 = \mu$
+a.
+   Datos: $\sigma_1 = 1.23$, $\sigma_2 = 1.37$,  $\overline{X_1}=$ rendimiento prom gas 1, $\overline{X_2}=$ rendimiento prom gas 2. $n_1 = 35$, $n_2=42$
+   Queremos calcular $P(\overline{X_1}-\overline{X_2}>0.45)$, aplicamos 1. de [[id:a94478f7-c134-4d47-8a59-4a3205e45346][Trabajando con dos poblaciones]]
+  $P(Z> \frac{0.45-0}{\sqrt{\frac{1.23^2}{35}+\frac{1.37^2}{42}}})$, como \( \mu = \mu_1 = \mu_2 \rightarrow \mu_1 - \mu_2 = 0 \)
+  
+   #+begin_src R :session *R*
+1-pnorm(0.45/sqrt(( 1.23^2/35 ) + ( 1.37^2/42 )))
+   #+end_src
+
+   #+RESULTS:
+   : 0.0645458902486074
+
+b.
+   $P(0.65<\overline{X_1}-\overline{X_2}<0.83) = P(\overline{X_1}<0.83) - P(\overline{X_2}<0.65)$
+   #+begin_src R :session *R*
+x1 = pnorm(0.83/sqrt(( 1.23^2/35 ) + ( 1.37^2/42 )))
+x2 = pnorm(0.65/sqrt(( 1.23^2/35 ) + ( 1.37^2/42 )))
+x1-x2
+   #+end_src
+
+   #+RESULTS:
+   : 0.0116210186749998
+
+  [[file:./images/screenshot-08.png]]
+
+*** Se sabe que 2% de las unidades fabricadas por A son defectuosas, y que el 25% de las fabricadas por B son defectuosas.
+Se necesitan 100 unidades de A y 150 de B, Cual es la probabilidad de que la proporcion de defectuosos muestrales de A supere a los de B?
+
+Datos: $\pi_1 = 0.02$, $\pi_2=0.025$, $n_1=100$, $n_2=150$, $p_1:$ prop. defectuosos de A $p_2:$ prop. defectuosos de B
+Queremos calcular $P(p_1 - p_2 > 0)$
+\[ P(Z>\frac{0-(\pi_1 - \pi_2)}{\sqrt{\frac{\pi_1(1-\pi_1)}{n_1}+\frac{\pi_2(1-\pi_2)}{n_2}}}) \]
+
+#+begin_src R :session *R*
+num=0-(0.02-0.025)
+denom=sqrt((0.02*0.98/100)+(0.025*0.975/150))
+1-pnorm(num/denom)
+#+end_src
+
+#+RESULTS:
+: 0.395861500409604
+
+** Intervalos de Confianza
+
+*** 6.5
+Se ha comprobado que la concentración promedio de zinc que se saca del agua de un río a partir de una muestra de mediciones de zinc en 36 sitios diferentes es de 2.6 gramos por mililitro. Encontrar los intervalos de confianza del 95% y 99% para la concentración media de zinc en el río, suponiendo que la desviación típica de la población es 0.3.
+
+[[id:527385f7-28e2-4083-b123-a3b3169d2f2e][Para $\mu$ con $\sigma$ o $\sigma^2$ conocido]]
+
+En primer caso con \( \alpha = 0.05 \)
+#+begin_src R :session *R* :results output
+ICMU1(36, 2.6, 0.3)
+#+end_src
+
+#+RESULTS:
+: Un intervalo de confianza para MU
+:  al nivel de confianza 95 % es:
+:  Limite inferior: 2.502002 Limite superior: 2.697998
+
+
+En segundo caso con \( \alpha = 0.01 \)
+#+begin_src R :session *R* :results output
+ICMU1(36, 2.6, 0.3, 0.99)
+#+end_src
+
+#+RESULTS:
+: Un intervalo de confianza para MU 
+:  al nivel de confianza 99 % es:
+:  Limite inferior: 2.471209 Limite superior: 2.728791
+
+*** 6.6
+Determinar un intervalo de confianza al nivel α = 0.05 para la probabilidad de que un recién nacido sea niño, si en una muestra de tamaño 123 se han contabilizado 67 niños.
+
+Tenemos \( p = \frac{67}{123} = 0.54 \) y \( n = 123 \).
+
+#+begin_src R :session *R* :results output
+ICPI(123, 0.54, 0.95)
+#+end_src
+
+#+RESULTS:
+: Un intervalo de confianza para PI
+:  al nivel de confianza 95 % es:
+:  Limite inferior: 0.4519212 Limite superior: 0.6280788
+
+
+*** 6.7
+El encargado del departamento de producción de una fábrica recibe un lote de 2000 piezas necesarias para el montaje de un artículo. El fabricante de las piezas asegura que en este lote no hay más de 100 piezas defectuosas.
+
+¿Cuántas piezas hay que examinar para que, con un nivel de confianza del 95%, el error que se cometa en la estimación de la proporción de piezas defectuosas no sea mayor que 0.05?
+
+Si se toma una muestra de 100 piezas elegidas al azar y se encuentran 4 defectuosas, determinar un intervalo de confianza para la proporción de defectuosas al nivel del 95%.
+
+
+** Prueba Hipotesis
+*** fabricantes de herramientas
+[[file:./images/screenshot-14.png]]
+
+#+begin_src R :session *R* :results output
+PHMU(MU0 = 10, H1 = "mayor", NS=0.01, n = 40, prom = 11.25, Var = 9, POB = FALSE)
+#+end_src
+
+\( prom= \frac{450}{40} \)
+
+#+RESULTS:
+: La Hipotesis alternativa es H1: Mu mayor 10 
+: [1] "Varianza Poblacional Desconocida"
+: El valor de la estadística de prueba es: 2.635231
+: [1] "SE RECHAZA H0"
+: El valor-p vale: 0.006000591
+
+Con un nivel de confianza del 99%, rechazamos \( H_0 \) de que el tiempo promedio de preparacion es \( \leq 10 \) minutos por hora. El equipo no cumple con la especificacion de tiempo de preparacion, ya que el tiempo prom observado 11.25 min/hora es mayor que el limite 10min/hora.
+Ademas, \( p \approx 0.006 < \alpha = 0.01\)
