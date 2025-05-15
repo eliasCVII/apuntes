@@ -126,7 +126,8 @@ Sean $X_1,\dots,X_n$ m.a $N(\mu_1,\sigma_1^2)$ y $Y_1,\dots,Y_n$ m.a $N(\mu_2,\s
 #   sigma DESVIACIÓN ESTÁNDAR POBLACIONAL
 #   nc NIVEL DE CONFIANZA
 
-ICMU1=function(n,prom,sigma,nc=0.95)
+# IC para mu con sigma, sigma2 conocido
+ICMU1=function(n,prom,sigma,nc=0.95) 
   {
     z=qnorm(1-(1-nc)/2)
     EE=z*sigma/sqrt(n)
@@ -147,6 +148,7 @@ ICMU1=function(n,prom,sigma,nc=0.95)
 #   s DESVIACIÓN ESTÁNDAR MUESTRAL
 #   nc NIVEL DE CONFIANZA
 
+# IC para mu con sigma, sigma2 desconocido
 ICMU2=function(n,prom,s,nc=0.95)
   {
     t=qt(1-(1-nc)/2,n-1)
@@ -166,6 +168,8 @@ ICMU2=function(n,prom,s,nc=0.95)
 #   s DESVIACIÓN ESTÁNDAR MUESTRAL
 #   nc NIVEL DE CONFIANZA
 
+
+# IC para sigma2 (varianza poblacional)
 ICSIGMA2=function(n,s,nc=0.95)
   {
     v1=qchisq((1-nc)/2,n-1)
@@ -186,6 +190,7 @@ ICSIGMA2=function(n,s,nc=0.95)
 #   p PROPORCIoN MUESTRAL
 #   nc NIVEL DE CONFIANZA
 
+# IC para pi (proporcion poblacional)
 ICPI=function(n,p,nc=0.95)
   {
     z=qnorm(1-(1-nc)/2)
@@ -206,6 +211,7 @@ ICPI=function(n,p,nc=0.95)
 #     sigma DESVIACIoN ESTaNDAR
 #
 
+# tamano de la muestra para media poblacional mu
 NMU=function(EE,nc,sigma)
   {
     z=qnorm(1-(1-nc)/2)
@@ -223,6 +229,7 @@ NMU=function(EE,nc,sigma)
 #     p PROPORCIoN CONOCIDA
 #
 
+# tamano de muestra para proporcion poblacional
 NPI=function(EE,nc,p)
   {
     z=qnorm(1-(1-nc)/2)
@@ -236,6 +243,7 @@ NPI=function(EE,nc,p)
  de estimacion de",EE,",en el peor de los casos, es:",n2,"\n")
   }
 #+end_src
+
 ** Para dos poblaciones, diferencia de medias $\mu_1 - \mu_2$
 *** Caso 1: Varianzas poblacionales conocidas
 :PROPERTIES:
@@ -248,6 +256,8 @@ NPI=function(EE,nc,p)
 # sigma1, sigma2 DESVIACIONES POBLACIONALES
 # nc NIVEL DE CONFIANZA (PROPORCIÓN)
 
+# Diferencia de medias
+## Caso1. IC para dos poblaciones, con varianzas poblacionales conocidas
 difmed1=function(n1,n2,prom1,prom2,sigma1,sigma2,nc=0.95)
 {
   z=qnorm(1-(1-nc)/2)
@@ -273,7 +283,9 @@ difmed1=function(n1,n2,prom1,prom2,sigma1,sigma2,nc=0.95)
 # nc NIVEL DE CONFIANZA (PROPORCIÓN)
 #
 
-     difmed2=function(n1,n2,prom1,prom2,s1,s2,nc=0.95)
+# Diferencia de medias
+## Caso2. IC para dos poblaciones, con varianzas poblacionales desconocidas pero iguales
+difmed2=function(n1,n2,prom1,prom2,s1,s2,nc=0.95)
      {
         t=qt(1-(1-nc)/2,n1+n2-2)
   sp=sqrt(((n1-1)*s1^2+(n2-1)*s2^2)/(n1+n2-2))
@@ -299,7 +311,9 @@ difmed1=function(n1,n2,prom1,prom2,sigma1,sigma2,nc=0.95)
 # nc NIVEL DE CONFIANZA (PROPORCIÓN)
 #
 
-     difmed3=function(n1,n2,prom1,prom2,s1,s2,nc=0.95)
+# Diferencia de medias
+## Caso3. IC para dos poblaciones, con varianzas poblacionales desconocidas pero y diferentes
+difmed3=function(n1,n2,prom1,prom2,s1,s2,nc=0.95)
      {
   eta=(s1^2/n1+s2^2/n2)^2/((s1^2/n1)^2/(n1-1)+
              (s2^2/n2)^2/(n2-1))
@@ -324,6 +338,8 @@ difmed1=function(n1,n2,prom1,prom2,sigma1,sigma2,nc=0.95)
 # nc NIVEL DE CONFIANZA (PROPORCION)
 #
 
+# Diferencia de medias
+## Cuociente de varianzas poblacionales
 cuovar=function(n1,n2,s1,s2,nc=0.95)
      {
   f1=qf((1-nc)/2,n1-1,n2-1)
@@ -347,6 +363,7 @@ cuovar=function(n1,n2,s1,s2,nc=0.95)
 #   p1, p2 PROPORCIONES MUESTRALES
 #   nc NIVEL DE CONFIANZA (PROPORCIÓN)
 
+# IC para diferencia de proporciones pi1 - pi2
 difprop=function(n1,n2,p1,p2,nc=0.95){
   z=qnorm(1-(1-nc)/2)
   v1=p1*(1-p1)/n1
@@ -579,7 +596,6 @@ denom=sqrt((0.02*0.98/100)+(0.025*0.975/150))
 : 0.395861500409604
 
 ** Intervalos de Confianza
-
 *** 6.5
 Se ha comprobado que la concentración promedio de zinc que se saca del agua de un río a partir de una muestra de mediciones de zinc en 36 sitios diferentes es de 2.6 gramos por mililitro. Encontrar los intervalos de confianza del 95% y 99% para la concentración media de zinc en el río, suponiendo que la desviación típica de la población es 0.3.
 
@@ -620,14 +636,49 @@ ICPI(123, 0.54, 0.95)
 :  al nivel de confianza 95 % es:
 :  Limite inferior: 0.4519212 Limite superior: 0.6280788
 
-
 *** 6.7
 El encargado del departamento de producción de una fábrica recibe un lote de 2000 piezas necesarias para el montaje de un artículo. El fabricante de las piezas asegura que en este lote no hay más de 100 piezas defectuosas.
 
-¿Cuántas piezas hay que examinar para que, con un nivel de confianza del 95%, el error que se cometa en la estimación de la proporción de piezas defectuosas no sea mayor que 0.05?
+a. ¿Cuántas piezas hay que examinar para que, con un nivel de confianza del 95%, el error que se cometa en la estimación de la proporción de piezas defectuosas no sea mayor que 0.05?
 
-Si se toma una muestra de 100 piezas elegidas al azar y se encuentran 4 defectuosas, determinar un intervalo de confianza para la proporción de defectuosas al nivel del 95%.
+   Necesitamos calcular el tamano de la muestra, usamos ~NPI()~, ademas tenemos que \( p =\frac{100}{2000} = 0.05 \), el error maximo \( E = 0.05 \) y \( nc  \) = 0.95
+   #+begin_src R :session *R* :results output
+NPI(0.05, 0.95, 0.05)
+   #+end_src
 
+   #+RESULTS:
+   : El tamano de la muestra para estimar PI
+   :  al nivel de confianza 95 % con un error
+   :  de estimacion de 0.05 , es: 73
+   : El tamano de la muestra para estimar PI
+   :  al nivel de confianza 95 % con un error
+   :  de estimacion de 0.05 ,en el peor de los casos, es: 384
+
+b. Si se toma una muestra de 100 piezas elegidas al azar y se encuentran 4 defectuosas, determinar un intervalo de confianza para la proporción de defectuosas al nivel del 95%.
+   #+begin_src R :session *R* :results output
+ICPI(100, 0.04, 0.95)
+   #+end_src
+
+   #+RESULTS:
+   : Un intervalo de confianza para PI 
+   :  al nivel de confianza 95 % es:
+   :  Limite inferior: 0.001592707 Limite superior: 0.07840729
+
+*** 6.8
+El peso de los terneros de una granja se distribuye normalmente, con desviación típica de 10 kilogramos. Se toma al azar una muestra de 35 de ellos para transportarlos en un camión. Sabiendo que el peso medio resulta ser de 140 kilogramos, determinar un intervalo de confianza al 8% de nivel de significación en el que oscilará el peso de los 35 terneros.
+
+\( X \sim N(\mu, 10) \). La suma de los pesos es \(35X \), entonces \( N(35\cdot 140, 10\sqrt{35}) \). Asi, tenemos que \[ IC= n \overline{X} \pm Z_{\frac{a}{2}} \sigma\sqrt{n} = 35\cdot 140 \pm 1.75\cdot 10\sqrt{35} = 4900 \pm 103.53 \]
+
+*** 6.9
+Dos compañías A y B fabrican el mismo tipo de cable. Un distribuidor desea conocer la diferencia promedio de la resistencia a la rotura de los mismos, para lo cual toma muestras de 100 cables de A y 50 cables de B. La muestra de los cables de la compañía A arroja una resistencia promedio a la rotura de 4500 kilogramos, mientras que los cables de la compañía B arrojan una resistencia promedio a la rotura de 4000 kilogramos. Se sabe, por experiencia, que la desviación típica de la resistencia a la rotura es de 300 kilogramos para la compañía A y de 200 kilogramos para la compañía B. Se pide estimar, con un nivel de confianza del 95%, el intervalo de confianza de la diferencia de medias de la resistencia a la rotura entre los dos cables, si la resistencia a la rotura se distribuye normalmente para ambas compañías.
+
+Comp. A: \( n=100, \overline{X}_A = 4500, \sigma_A = 300 \)
+Comp. B: \( n=50, \overline{X}_B = 4000, \sigma_B = 200 \)
+\( nc = 0.95 \)
+
+#+begin_src R :session *R* :results output
+difmed1(n1=100, n2=50, prom1=4500, prom2=4000, sigma1=300, sigma2=200)
+#+end_src
 
 ** Prueba Hipotesis
 *** fabricantes de herramientas
